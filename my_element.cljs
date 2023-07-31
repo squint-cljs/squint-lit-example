@@ -1,5 +1,5 @@
 (ns my-element
-  (:require #_[squint.core :refer [defclass js-template]]
+  (:require [squint.core :refer [defclass js-template]]
             ["lit" :as lit]))
 
 (defclass MyElement
@@ -12,18 +12,16 @@
 
   Object
   (render [this]
-          (prn :render!!!!)
           (js-template lit/html
                        "<h1>" (.-name this)  "</h1>"
                        "<button @click=" (.-_onClick this) " part=\"button\">"
-                       "Click Count: " (.-count this)
+                       "Click Count: " count
                        "</button>"))
 
   (_onClick [this]
             (set! count (inc count))
-            (prn count) ;; this works
-            (.dispatchEvent this (new js/CustomEvent "count-changed")))
+            (.dispatchEvent this (new js/CustomEvent "count-changed"))))
 
-  )
+(set! (.-properties MyElement) #js {"count" #js {}})
 
 (js/window.customElements.define "my-element" MyElement)
